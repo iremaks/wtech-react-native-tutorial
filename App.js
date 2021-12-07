@@ -3,28 +3,91 @@ import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useState } from 'react';
 import { Button, FlatList, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Ionicons } from '@expo/vector-icons';
+
+
 
 export default function App() {
 
-
-
   const Stack = createNativeStackNavigator();
 
+  const Tab = createBottomTabNavigator();
+
   return (
+    // <NavigationContainer>
+    //   <Stack.Navigator initialRouteName='Product'>
+
+
+
+    //     <Stack.Screen name='Product' component={ProductsScreen} />
+    //     <Stack.Screen name='ProductDetail' component={ProductDetail} />
+
+    //     <Stack.Screen name="Home" component={HomeScreen} options={{ title: 'Home Screen' }} />
+    //     <Stack.Screen name="Detail" component={DetailScreen} />
+
+
+
+    //   </Stack.Navigator>
+    // </NavigationContainer>
+
     <NavigationContainer>
-      <Stack.Navigator initialRouteName='Product'>
+
+      <Tab.Navigator>
+
+
+        <Tab.Screen name="Home" component={HomeScreen} options={{
+          tabBarLabel: 'Anasayfa',
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="home-outline" color={color} size={size} />
+          )
+        }} />
 
 
 
-        <Stack.Screen name='Product' component={ProductsScreen} />
-        <Stack.Screen name='ProductDetail' component={ProductDetail} />
+        <Tab.Screen name="Product" component={ProductsScreen} options={{
 
-        <Stack.Screen name="Home" component={HomeScreen} options={{ title: 'Home Screen' }} />
-        <Stack.Screen name="Detail" component={DetailScreen} />
+          tabBarLabel: 'Ürünler',
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="gift-outline" color={color} size={size} />
+          ),
+
+        }} />
+
+        <Tab.Screen name="Cart" component={ProfileScreen} options={{
+
+          tabBarLabel: 'Sepet',
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="cart-outline" color={color} size={size} />
+          ),
+          tabBarBadge: 3 
+
+        }} />
 
 
 
-      </Stack.Navigator>
+        <Tab.Screen name="Notification" component={CartScreen} options={{
+
+          tabBarLabel: 'Bildirimler',
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="notifications-outline" color={color} size={size} />
+          ),
+
+        }} />
+
+
+        <Tab.Screen name="Profil" component={CartScreen} options={{
+
+          tabBarLabel: 'Sepet',
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="person-outline" color={color} size={size} />
+          ),
+
+        }} />
+
+
+      </Tab.Navigator>
+
     </NavigationContainer>
 
   );
@@ -46,6 +109,10 @@ const styles = StyleSheet.create({
 
 
 
+const CartScreen = ({ navigation }) => {
+  return (<Text>Cart</Text>)
+}
+
 const ProductsScreen = ({ navigation }) => {
 
   const [products, setProducts] = useState([]);
@@ -64,7 +131,7 @@ const ProductsScreen = ({ navigation }) => {
 
 
   const renderItem = ({ item }) => (
-    <TouchableOpacity onPress={() => navigation.navigate('ProductDetail', { id: item.id, price: item.unitPrice })}>
+    <TouchableOpacity onPress={() => navigation.navigate('ProductDetail', { productItem: item })}>
 
       <Text style={{ padding: 6, backgroundColor: 'aqua', margin: 3 }}>{item.name}</Text>
 
@@ -88,9 +155,9 @@ const ProductsScreen = ({ navigation }) => {
 const ProductDetail = ({ navigation, route }) => {
 
 
-  const { id, price } = route.params
+  const { productItem } = route.params
 
-  return (<Text>Product Detail Screen - {id} - {price}</Text>)
+  return (<Text>Product Detail Screen - {productItem.id} - {productItem.unitPrice}</Text>)
 
 }
 
@@ -102,10 +169,15 @@ const HomeScreen = ({ navigation }) => {
       <Text>Home Screen</Text>
       <Button title='Go to detail screen' onPress={() => navigation.navigate('Detail')}></Button>
     </>
+  )
+}
 
 
-
-
+const ProfileScreen = ({ navigation }) => {
+  return (
+    <>
+      <Text>Profile Screen</Text>
+    </>
   )
 }
 
